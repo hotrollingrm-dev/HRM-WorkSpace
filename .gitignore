@@ -1,0 +1,21 @@
+# ---- company data: never commit -----------------------------------
+source_files/
+app/company_data/*
+!app/company_data/README.md
+project_docs/FILE_AUDIT.md
+project_docs/screenshots/
+# ---- runtime data & local environment ----------------------------
+app/data/
+app/backups/
+app/.venv/
+app/wheels/
+.env
+# ---- python / tooling ---------------------------------------------
+__pycache__/
+*.pyc
+.pytest_cache/
+*.db
+*.db-wal
+*.db-shm
+.DS_Store
+Thumbs.db

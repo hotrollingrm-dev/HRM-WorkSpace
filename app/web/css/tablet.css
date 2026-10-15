@@ -1,0 +1,71 @@
+/* ═══════════ Breakpoints (§6: 1680 / 1440 / 1280 / 1024 / 640) & touch ═══════════ */
+.qe-toggle,.qe-close,.qe-scrim{display:none}
+
+@media (pointer:coarse){
+  .mx td.c{height:46px}
+  .mx .dh{min-width:42px;width:42px}
+  .mx .rowname .rm{opacity:.4}
+  .legend span:last-child{display:none}
+  .matrix-wrap,.drawer-b,.qe-body,.page{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  td.rc{height:44px;min-width:40px}
+}
+
+@media (max-width:1680px){ .planner{grid-template-columns:1fr 360px} .miller{grid-template-columns:1fr 1fr 1.2fr 360px} }
+@media (max-width:1440px){
+  .mx .namecol{width:240px;min-width:240px;max-width:240px}
+  .mx .rowname .meta:not(.lanekey){display:none}
+  .month-title{font-size:26px}
+  .miller{grid-template-columns:1fr 1fr 1fr}
+  .miller>.panel:last-child{grid-column:1 / -1}
+  .rail{width:196px}
+}
+
+/* ≤1280: quick entry slides over; sidebar collapses to icons (68px) with glass tooltips */
+@media (max-width:1280px){
+  .rail{width:68px;padding:14px 8px;align-items:center}
+  .rail .brand{padding:0 0 12px}
+  .rail .brand .bi,.nav-it .bi,.rail .me .bi,.rail .me>svg{display:none}
+  .nav-it{width:52px;min-height:52px;padding:0;justify-content:center}
+  .nav-it[aria-current=page]::before{left:-8px}
+  .nav-it .tip{display:block;position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);white-space:nowrap;padding:8px 12px;border-radius:12px;
+    background:var(--toast-bg);color:var(--toast-fg);font-size:14px;opacity:0;pointer-events:none;transition:opacity .15s var(--ease);z-index:90}
+  .nav-it:hover .tip,.nav-it:focus-visible .tip{opacity:1}
+  .rail .me{padding:6px;justify-content:center;background:transparent}
+  .planner{grid-template-columns:1fr}
+  .qe-toggle,.qe-close{display:inline-flex}
+  .topbar .btn.collapse .bi{display:none}
+  .topbar .btn.collapse{width:48px;padding:0}
+  .qe{position:fixed;top:12px;right:12px;bottom:12px;width:min(430px,92vw);z-index:40;box-shadow:var(--shadow-up);background:var(--glass-strong);
+    transform:translateX(calc(100% + 24px));transition:transform .34s var(--ease)}
+  .planner.qe-open .qe{transform:none}
+  .planner.qe-open .qe-scrim{display:block;position:fixed;inset:0;z-index:39;background:var(--scrim);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .sysgrid{grid-template-columns:1fr 1fr}
+  .login .art{padding:36px}
+  .login .art h1{font-size:42px}
+}
+
+/* ≤1024: tablet portrait */
+@media (max-width:1024px){
+  .topbar{padding:12px 14px 12px 18px}
+  .topbar .grow{flex:1}
+  .top-actions{flex:1 1 100%;justify-content:flex-start}
+  .top-actions .btn.primary{margin-left:auto}
+  .mx .namecol{width:190px;min-width:190px;max-width:190px}
+  .mx .rowname .sub{display:none}
+  .miller,.sysgrid{grid-template-columns:1fr}
+  .staff-grid{grid-template-columns:1fr}
+  .dropzone{flex-wrap:wrap}
+  #impbody .panel>div[style*="grid-template-columns"]{grid-template-columns:1fr!important}
+  #impbody .panel>div:last-child{overflow-x:auto}
+  table.grid{min-width:860px}
+  .login{grid-template-columns:1fr}
+  .login .art{min-height:280px}
+}
+
+/* ≤640: phone — planner is a desktop/tablet tool; keep it usable */
+@media (max-width:640px){
+  .shell{padding:8px;gap:8px}
+  .rail{width:60px}
+  .month-title{font-size:22px}
+  .mx .namecol{width:150px;min-width:150px;max-width:150px}
+}
