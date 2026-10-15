@@ -57,6 +57,17 @@ function shell(page) {
         h("span", { class: "av" }, initials), h("span", { class: "bi" }, h("b", {}, S.me.display_name), h("span", { class: "jp" }, S.me.role)), icon("logout"))),
     mainEl));
 }
+function mobileFile() {
+  const a = h("a", { href: "/api/mobile-file", download: "HRM_mobile.csv" }); document.body.append(a); a.click(); a.remove();
+  dialog({ title: "ส่งงานขึ้นมือถือ",
+    body: h("div", {}, h("ol", { class: "steps" },
+      h("li", {}, "ไฟล์ ", h("b", {}, "HRM_mobile.csv"), " ถูกดาวน์โหลดแล้ว (โฟลเดอร์ Downloads)"),
+      h("li", {}, "เปิด ", h("b", {}, "drive.google.com"), " แล้วเข้าโฟลเดอร์ HRM"),
+      h("li", {}, "ลากไฟล์ใส่หน้า Drive — ถ้าถามให้เลือก ", h("b", {}, "แทนที่ไฟล์เดิม")),
+      h("li", {}, "เสร็จแล้ว — เปิดหน้ามือถือหรือกด “โหลดใหม่” ก็เห็นงานใหม่ทันที")),
+      h("p", { class: "hint" }, "ไฟล์มีเฉพาะงานที่ Publish แล้ว 8 วันข้างหน้า และตัวอักษรทีม A/B/C — ไม่มีรายชื่อพนักงาน · ควรทำหลัง Publish ทุกครั้ง")),
+    actions: [{ label: "เข้าใจแล้ว", kind: "primary" }] });
+}
 async function logout() {
   await api("/auth/logout", { method: "POST" }).catch(() => {});
   location.hash = ""; showLogin();
@@ -99,6 +110,7 @@ function renderPlan() {
       p.revision ? `REV.${String(p.revision).padStart(2, "0")}` : "REV.—"),
     can("leader") ? h("button", { class: "btn ghost collapse", onclick: copyPrior, "aria-label": T.copyPrior[0], title: T.copyPrior[0] }, icon("copy"), bi("copyPrior")) : null,
     can("leader") ? h("button", { class: "btn collapse", onclick: exportDialog, "aria-label": T.export[0], title: T.export[0] }, icon("download"), bi("export")) : null,
+    h("button", { class: "btn collapse", onclick: mobileFile, "aria-label": "ไฟล์สำหรับมือถือ", title: "ไฟล์สำหรับมือถือ (ลากใส่ Google Drive)" }, icon("phone"), bi(["ไฟล์มือถือ", "スマホ用"])),
     can("leader") ? h("button", { class: "btn ink qe-toggle", "aria-expanded": String(!!S.qeOpen), onclick: () => toggleQE() }, icon("plus"), bi("quick")) : null,
     h("button", { class: "btn primary", onclick: publishDialog, disabled: p.revision > 0 && !p.draft_dirty }, icon("send"), bi("publish"))),
   );

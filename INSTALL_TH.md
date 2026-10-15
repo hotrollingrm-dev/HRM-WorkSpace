@@ -60,6 +60,9 @@ C:\HRM-WorkSpace\app\company_data\
 
 ---
 
+> **ไม่อยากยุ่งกับ Wi-Fi / IP บริษัท?** ใช้วิธีดูงานผ่าน Google แทนได้ → **[MOBILE_GOOGLE_TH.md](MOBILE_GOOGLE_TH.md)**
+> (หัวหน้ากดปุ่ม "ไฟล์มือถือ" แล้วลากไฟล์ใส่ Google Drive · มือถือเปิดดูได้ทุกที่ · ดูอย่างเดียว)
+
 ## ส่วน B — ติดตั้งบน Tablet / มือถือ
 
 ### B1. เปิดระบบ

@@ -28,6 +28,7 @@ export const h = (tag, attrs = {}, ...kids) => {
 
 // ── Icon set: 24px grid, 1.6 stroke, round caps — one family throughout ──
 const P = {
+  phone: "M8 2.5h8a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2zM10.5 18.5h3",
   grid: "M4 5.5h16M4 10.5h16M4 15.5h16M4 20h16M8.5 3v18M14 3v18",
   calendar: "M4.5 7.5h15v12h-15zM4.5 11h15M8.5 4.5v4M15.5 4.5v4",
   upload: "M12 15V4.5M7.5 9 12 4.5 16.5 9M5 15.5V19h14v-3.5",

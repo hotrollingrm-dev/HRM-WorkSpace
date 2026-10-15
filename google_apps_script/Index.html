@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  /* Japan Factory theme (lite) — big, calm, readable for everyone */
+  :root{
+    --bg:#F3EDE3; --card:#FFFDF9; --line:#E3D8C7; --ink:#1E222B; --ink2:#5B5750; --ink3:#8A837A;
+    --primary:#2B63CC; --gold:#B48C45; --stk:#6B5748;
+    --ok:#138D4C; --warn:#C25A0B; --bad:#C8323A; --idle:#657083; --day:#E7A21B; --night:#5566C8;
+    --pearl:linear-gradient(180deg,#FFFFFF 0%,#FBF7F0 55%,#F3ECE1 100%);
+    --shadow:0 0 0 1px rgba(134,112,94,.28),inset 0 1px 0 #fff,0 10px 22px -12px rgba(80,60,40,.35);
+    --font:"Thonburi","Sukhumvit Set","Noto Sans Thai","Leelawadee UI",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#141A2B; --card:#1C2336; --line:#2D3650; --ink:#EEF1F7; --ink2:#B7BFCE; --ink3:#8C95A8;
+    --primary:#8DB3FF; --gold:#E2C27F; --stk:#121624; --ok:#4CCB86; --warn:#FFA765; --bad:#FF7A7E; --idle:#A5AEBC;
+    --pearl:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.04));
+    --shadow:0 0 0 1px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.10),0 10px 22px -12px rgba(0,0,0,.7);
+  }}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--font);font-size:19px;line-height:1.5;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(120% 60% at 20% 0%,rgba(142,195,234,.45),transparent 60%),
+               radial-gradient(90% 50% at 100% 10%,rgba(252,230,200,.8),transparent 60%),var(--bg);min-height:100vh}
+  @media (prefers-color-scheme:dark){body{background:radial-gradient(120% 60% at 20% 0%,rgba(70,90,170,.35),transparent 60%),var(--bg)}}
+  .wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+  .stk .o{stroke:var(--stk);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  header .brand{font-weight:700;font-size:17px;color:var(--ink2);flex:1}
+  .reload{border:0;min-height:52px;padding:0 18px;border-radius:999px;background:var(--pearl);box-shadow:var(--shadow);
+    font:inherit;font-size:17px;font-weight:600;color:var(--ink);cursor:pointer}
+  .reload:active{transform:translateY(1px)}
+  h1{font-size:34px;line-height:1.15;margin:10px 0 2px;letter-spacing:-.01em}
+  .sub{color:var(--ink2);font-size:17px}
+  .now{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:6px 14px 6px 8px;border-radius:999px;
+    background:var(--pearl);box-shadow:var(--shadow);font-weight:700;font-size:17px}
+  .days{display:flex;gap:8px;overflow-x:auto;padding:16px 2px 6px;margin:0 -2px;scrollbar-width:none}
+  .days::-webkit-scrollbar{display:none}
+  .days button{flex:none;min-width:76px;min-height:64px;border:0;border-radius:18px;background:var(--pearl);box-shadow:var(--shadow);
+    font:inherit;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+  .days button b{font-size:21px}
+  .days button small{font-size:14px;color:var(--ink2)}
+  .days button[aria-pressed=true]{background:var(--primary);color:#fff;box-shadow:0 10px 22px -10px var(--primary)}
+  .days button[aria-pressed=true] small{color:rgba(255,255,255,.85)}
+  @media (prefers-color-scheme:dark){.days button[aria-pressed=true]{color:#0B1530}.days button[aria-pressed=true] small{color:#0B1530}}
+  .shifts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 4px}
+  .sh{display:flex;align-items:center;gap:10px;padding:12px;border-radius:20px;background:var(--card);box-shadow:var(--shadow)}
+  .sh b{display:block;font-size:22px;line-height:1.1}
+  .sh small{color:var(--ink2);font-size:15px}
+  .hol{margin:12px 0 0;padding:12px 16px;border-radius:16px;background:rgba(231,162,27,.14);color:var(--ink);font-weight:600}
+  h2{font-size:21px;margin:22px 4px 10px;display:flex;justify-content:space-between;align-items:baseline}
+  h2 span{font-size:16px;color:var(--ink3);font-weight:600}
+  .task{display:grid;grid-template-columns:8px 1fr;border-radius:20px;overflow:hidden;background:var(--card);box-shadow:var(--shadow);margin-bottom:12px}
+  .task i{display:block}
+  .task .b{padding:14px 16px 16px}
+  .task .tm{font-size:17px;font-weight:700;color:var(--primary)}
+  .task .tt{font-size:21px;font-weight:700;line-height:1.35;margin:2px 0 4px}
+  .task .meta{font-size:16px;color:var(--ink2)}
+  .pill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:3px 12px;border-radius:999px;font-size:15px;font-weight:700;
+    color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent)}
+  .pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+  .empty{text-align:center;padding:36px 16px;color:var(--ink2)}
+  .empty b{display:block;color:var(--ink);font-size:21px;margin:10px 0 4px}
+  .foot{margin-top:26px;font-size:15px;color:var(--ink3);text-align:center}
+  .stale{margin:16px 0 0;padding:14px 16px;border-radius:16px;background:rgba(200,50,58,.12);color:var(--bad);font-weight:700}
+  .loading{opacity:.5;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+let DATA = <?!= dataJson ?>;
+const TH_WD = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+const TH_WD_S = ["อา","จ","อ","พ","พฤ","ศ","ส"];
+const TH_M = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const STATUS_C = {"แผน":"var(--idle)","กำลังทำ":"var(--primary)","พักงาน":"var(--warn)","รอตรวจ":"var(--warn)","เสร็จแล้ว":"var(--ok)","ยกเลิก":"var(--ink3)"};
+
+// stickers (same pen-and-pastel style as the main app)
+const SUN = '<svg class="stk" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><g stroke="#F6B73C" stroke-width="3.2" stroke-linecap="round"><path d="M24 4v5M24 39v5M4 24h5M39 24h5M9.9 9.9l3.5 3.5M34.6 34.6l3.5 3.5M9.9 38.1l3.5-3.5M34.6 13.4l3.5-3.5"/></g><circle class="o" cx="24" cy="24" r="10.5" fill="#FFD36E"/><path d="M31.4 17.4A10.5 10.5 0 0 1 17.4 31.4A12 12 0 0 0 31.4 17.4Z" fill="#F6B73C"/></svg>';
+const MOON = '<svg class="stk" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><path class="o" fill="#FFE08A" d="M29 7.5A17 17 0 1 0 41 33A13 13 0 1 1 29 7.5Z"/><circle cx="17" cy="22" r="2.2" fill="#F2C35A"/><circle cx="22" cy="33" r="1.6" fill="#F2C35A"/></svg>';
+const CAL = '<svg class="stk" viewBox="0 0 48 48" width="76" height="76" aria-hidden="true"><rect class="o" x="7" y="10" width="34" height="31" rx="6" fill="#FFFDF8"/><path class="o" fill="#F2958A" d="M7 16A6 6 0 0 1 13 10H35A6 6 0 0 1 41 16V20H7Z"/><rect class="o" x="14" y="6" width="4.4" height="8.5" rx="2.2" fill="#93A1AE"/><rect class="o" x="29.6" y="6" width="4.4" height="8.5" rx="2.2" fill="#93A1AE"/><path d="M17 30.5l4 4 9-9" fill="none" stroke="#4FB872" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// accept 2026-10-16, 16/10/2026 (if Drive converted the file to a Sheet) …
+const normDate = s => { s = String(s || "").trim(); let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/); if (m) { const y = +m[3] > 2400 ? +m[3] - 543 : +m[3]; return `${y}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`; }
+  return s; };
+const normTime = s => { const m = String(s || "").match(/(\d{1,2}):(\d{2})/); return m ? `${m[1].padStart(2,"0")}:${m[2]}` : ""; };
+const pd = s => { const [y, m, d] = s.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+const iso = d => d.toISOString().slice(0, 10);
+const bkkNow = () => new Date(Date.now() + 7 * 3600e3);                 // Thailand time, as a UTC-based Date
+const opDayToday = () => iso(new Date(bkkNow().getTime() - 8 * 3600e3)); // work day runs 08:00 → 08:00
+
+let sel = null;
+function model() {
+  const rows = (DATA.rows || []).map(r => ({ ...r, date: normDate(r.date), start: r.type === "task" ? normTime(r.start) : r.start, end: r.type === "task" ? normTime(r.end) : r.end }));
+  const meta = rows.find(r => r.type === "meta") || {};
+  const tasks = rows.filter(r => r.type === "task");
+  const shifts = Object.fromEntries(rows.filter(r => r.type === "shift").map(r => [r.date, r]));
+  const start = meta.date ? normDate(meta.date) : opDayToday();
+  const days = Array.from({ length: 8 }, (_, i) => iso(new Date(pd(start).getTime() + i * 864e5)));
+  return { meta, tasks, shifts, days };
+}
+
+function render() {
+  const app = document.getElementById("app");
+  if (DATA.error) {
+    app.innerHTML = `<header><span class="brand">HRM งานวันนี้</span><button class="reload" onclick="reload()">โหลดใหม่</button></header>
+      <div class="empty">${CAL}<b>ยังไม่มีข้อมูล</b>${esc(DATA.error)}<br>ให้หัวหน้ากดปุ่ม “ไฟล์มือถือ” ในโปรแกรม แล้วลากไฟล์ใส่ Google Drive</div>`;
+    return;
+  }
+  const M = model();
+  const today = opDayToday();
+  if (!sel || !M.days.includes(sel)) sel = M.days.includes(today) ? today : M.days[0];
+  const d = pd(sel);
+  const hr = bkkNow().getUTCHours();
+  const isNight = hr >= 20 || hr < 8;
+  const sh = M.shifts[sel];
+  const list = M.tasks.filter(t => t.date === sel);
+  const label = x => x === today ? "วันนี้" : (pd(x) - pd(today) === 864e5 ? "พรุ่งนี้" : TH_WD_S[pd(x).getUTCDay()]);
+  const gen = M.meta.title ? new Date(M.meta.title) : null;
+  const stale = gen && (Date.now() - gen.getTime()) > 36 * 3600e3;
+  const fmtGen = gen ? (() => { const g = new Date(gen.getTime() + 7 * 3600e3); return `${g.getUTCDate()} ${TH_M[g.getUTCMonth()]} ${String(g.getUTCHours()).padStart(2,"0")}:${String(g.getUTCMinutes()).padStart(2,"0")} น.`; })() : "—";
+
+  app.innerHTML = `
+    <header><span class="brand">HRM งานวันนี้</span><button class="reload" onclick="reload()">โหลดใหม่</button></header>
+    <h1>วัน${TH_WD[d.getUTCDay()]} ${d.getUTCDate()} ${TH_M[d.getUTCMonth()]}</h1>
+    <div class="sub">เริ่ม 08:00 ถึง 08:00 ของวันถัดไป</div>
+    ${sel === today ? `<span class="now">${isNight ? MOON : SUN} ตอนนี้ ${isNight ? "กะกลางคืน" : "กะกลางวัน"}</span>` : ""}
+    <nav class="days" aria-label="เลือกวัน">${M.days.map(x => `<button aria-pressed="${x === sel}" onclick="pick('${x}')"><b>${pd(x).getUTCDate()}</b><small>${label(x)}</small></button>`).join("")}</nav>
+    ${sh && (sh.start || sh.end) ? `<div class="shifts">
+        <div class="sh">${SUN}<div><b>ทีม ${esc(sh.start || "—")}</b><small>กะกลางวัน 08:00–20:15</small></div></div>
+        <div class="sh">${MOON}<div><b>ทีม ${esc(sh.end || "—")}</b><small>กะกลางคืน 20:00–08:15</small></div></div></div>` : ""}
+    ${sh && sh.title ? `<div class="hol">วันหยุด: ${esc(sh.title)}</div>` : ""}
+    <h2>งานตามแผน <span>${list.length} งาน</span></h2>
+    ${list.length ? list.map(t => `<article class="task"><i style="background:${esc(t.color || "#7F8898")}"></i><div class="b">
+        <div class="tm">${t.start ? `${esc(t.start)}${t.end ? "–" + esc(t.end) : ""} น.` : "ทั้งวัน"}</div>
+        <div class="tt">${esc(t.title)}</div>
+        <div class="meta">${esc(t.category)}${t.location ? " · " + esc(t.location) : ""}</div>
+        ${t.notes ? `<div class="meta">${esc(t.notes)}</div>` : ""}
+        <span class="pill" style="--c:${STATUS_C[t.status] || "var(--idle)"}">${esc(t.status || "แผน")}</span></div></article>`).join("")
+      : `<div class="empty">${CAL}<b>ไม่มีงานตามแผนวันนี้</b>ถ้าคิดว่าควรมี ให้ถามหัวหน้า</div>`}
+    ${stale ? `<div class="stale">ข้อมูลอาจเก่า (ส่งมาเมื่อ ${fmtGen}) — แจ้งหัวหน้าให้ส่งไฟล์ใหม่</div>` : ""}
+    <div class="foot">ข้อมูลส่งมาเมื่อ ${fmtGen} · แผนงานตามตาราง ไม่ใช่การบันทึกเข้างานจริง</div>`;
+}
+function pick(x) { sel = x; render(); scrollTo({ top: 0, behavior: "smooth" }); }
+function reload() {
+  document.getElementById("app").classList.add("loading");
+  if (window.google && google.script && google.script.run) {
+    google.script.run.withSuccessHandler(d => { DATA = d; document.getElementById("app").classList.remove("loading"); render(); })
+      .withFailureHandler(() => { document.getElementById("app").classList.remove("loading"); alert("โหลดไม่สำเร็จ ลองใหม่อีกครั้ง"); }).getData();
+  } else { location.reload(); }
+}
+render();
+</script>
+</body>
+</html>

@@ -21,6 +21,7 @@ from .models import (ROLES, TEAMS, Category, Employee, Holiday, ImportBatch, Imp
 from .seed import seed
 from .services import exporter, importer, roster as R
 from .services import plans as P
+from .services import mobile_export as MX
 from .timeutil import TimeError, build_range, month_days, op_day_window
 
 
@@ -634,6 +635,13 @@ def register_routes(app: FastAPI) -> None:
             raise HTTPException(404, "ไม่พบไฟล์")
         return FileResponse(p, filename=name,
                             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+    @app.get(api + "/mobile-file")
+    def mobile_file(db: Session = Depends(get_db), _: User = Depends(current_user)):
+        """Local download only — the user uploads it to their Google Drive by hand (no network here)."""
+        from fastapi.responses import Response
+        return Response(MX.build_csv(db), media_type="text/csv; charset=utf-8",
+                        headers={"Content-Disposition": f'attachment; filename="{MX.FILENAME}"'})
 
     # ---- shift roster (3 groups)
     def roster_batch_out(b) -> dict:
