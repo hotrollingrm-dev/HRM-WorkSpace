@@ -1,8 +1,15 @@
 # HRM WorkSpace — Agent Instructions
 
 - Primary language: Thai. Product UI: Thai main line, Japanese secondary small line. Missing/unapproved translations = `[รอแปล]`.
-- Visual style: HRM Hydraulic house theme — use the `hrm-hydraulic-theme` skill (`.claude/skills/`). Japanese replaces its default EN secondary line.
-- Repo workflow, tests and release steps: use the `hrm-workspace-dev` skill (`.claude/skills/`).
+## Skills
+- งาน UI/ดีไซน์ทุกงาน → ใช้ skill `impeccable` เป็นหลัก
+- เลือกสี/ฟอนต์/style → ค้นจาก `ui-ux-pro-max` ก่อน
+- ห้ามใช้ `using-superpowers` และ `task-observer` เว้นแต่จะสั่ง
+- `hrm-hydraulic-theme` = design tokens ที่แอปนี้ใช้อยู่แล้ว (`app/web/css/base.css`) — งานแก้หน้าจอเดิมให้คงความสอดคล้องกับ tokens นี้ ถ้าผลจาก `ui-ux-pro-max` จะเปลี่ยนสี/ฟอนต์หลักของแอป ให้ถามผู้ใช้ก่อน. Japanese replaces its default EN secondary line.
+- Repo workflow, tests and release steps → `hrm-workspace-dev`
+- If a named skill is not available in the session, say so and continue without it — never imitate a skill from memory.
+
+## Project rules
 - **Company data never goes into Git**: `app/company_data/*`, `source_files/`, screenshots, FILE_AUDIT. Employee names/IDs, the roster and meeting titles must not appear in code, tests or docs.
 - No fabricated attendance, employee names, recurrence intervals, ISO or safety settings. Separate facts, assumptions, unresolved details (`project_docs/OPEN_QUESTIONS.md`).
 - Work iteratively with working code in `app/` and tests. Every milestone ends with actual pass/fail results and a list of incomplete features.

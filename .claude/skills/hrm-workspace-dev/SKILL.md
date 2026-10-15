@@ -57,7 +57,8 @@ pip install --dry-run --no-index --find-links wheels/py314 --platform win_amd64 
 Zip = `git archive HEAD` + `app/wheels/`. Company data is shipped separately (`HRM_company_data.zip`), never inside the code package.
 
 ## UI conventions
-- Theme: `hrm-hydraulic-theme` skill; tokens in `app/web/css/base.css` (light + dark). No hard-coded colours outside tokens (category colours are user data).
+- Design work follows CLAUDE.md → Skills: `impeccable` first for any UI/design task, `ui-ux-pro-max` first for colour/font/style choices; `using-superpowers` and `task-observer` only when the user asks.
+- Current tokens come from `hrm-hydraulic-theme`, in `app/web/css/base.css` (light + dark). No hard-coded colours outside tokens (category colours are user data). Ask before replacing the app's core colours/fonts.
 - Labels via `bi()` / dictionary `T` in `app/web/js/ui.js` (Thai + Japanese). Japanese UI strings are drafts until reviewed (`JP_APPROVED = false`).
 - Check no horizontal page scroll at 1920 / 1440 / 1280 / 1024 / 390 px with Playwright; panes scroll inside themselves.
 - Never show the word "OT" on timeline/planning UI (test `test_no_ot_label_in_ui`).
