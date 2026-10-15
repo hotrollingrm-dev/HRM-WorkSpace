@@ -200,3 +200,94 @@ textarea.input{min-height:90px;padding:12px 14px;resize:vertical}
 .heat-now{position:absolute;top:-4px;bottom:-4px;width:4px;margin-left:-2px;border-radius:2px;background:var(--surface);
   box-shadow:0 0 0 2px var(--primary),0 0 12px 3px color-mix(in srgb,var(--primary) 55%,transparent)}
 @media (max-width:520px){.heat-scale>span.minor{display:none}}
+
+/* ═══════════ Liquid glass material (v2) ═══════════
+   Floating chrome only: rail, topbar, panels, drawers, dialogs, sheets, tab bar, shift cards, publish bar.
+   Content that people read in a hurry (planner matrix, task cards, inputs) stays solid.
+   Recipe: thin tint + heavy blur/saturation, a light-catching rim (top-left & bottom-right),
+   inner edge thickness, offset depth shadow. Falls back to opaque when transparency is reduced. */
+:root{
+  --glass:rgba(255,255,255,.26); --glass-card:rgba(255,255,255,.32); --glass-strong:rgba(255,255,255,.58);
+  --lg-tint:linear-gradient(165deg,rgba(255,255,255,.22),rgba(255,255,255,.03) 55%,rgba(255,255,255,.10));
+  --lg-blur:blur(26px) saturate(185%) brightness(1.05);
+  --lg-rim:linear-gradient(140deg,rgba(255,255,255,.95),rgba(255,255,255,.35) 22%,rgba(255,255,255,.06) 48%,rgba(255,255,255,.18) 72%,rgba(255,255,255,.75));
+  --lg-inner:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(255,255,255,.28),inset 0 0 22px rgba(255,255,255,.18);
+  --lg-depth:0 2px 6px rgba(18,28,48,.05),0 18px 44px rgba(18,28,48,.10);
+  --amb1:rgba(88,140,255,.40); --amb2:rgba(40,190,170,.28); --amb3:rgba(255,184,76,.30); --amb4:rgba(150,120,255,.20);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --glass:rgba(30,37,50,.40); --glass-card:rgba(26,32,44,.46); --glass-strong:rgba(22,28,38,.70);
+  --lg-tint:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,0) 55%,rgba(255,255,255,.03));
+  --lg-blur:blur(28px) saturate(170%) brightness(.95);
+  --lg-rim:linear-gradient(140deg,rgba(255,255,255,.34),rgba(255,255,255,.10) 22%,rgba(255,255,255,.02) 48%,rgba(255,255,255,.05) 72%,rgba(255,255,255,.22));
+  --lg-inner:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(255,255,255,.05),inset 0 0 22px rgba(255,255,255,.03);
+  --lg-depth:0 2px 6px rgba(0,0,0,.25),0 18px 44px rgba(0,0,0,.40);
+  --amb1:rgba(70,110,255,.30); --amb2:rgba(30,170,150,.18); --amb3:rgba(255,160,60,.14); --amb4:rgba(140,100,255,.16);
+}}
+:root[data-theme="dark"]{
+  --glass:rgba(30,37,50,.40); --glass-card:rgba(26,32,44,.46); --glass-strong:rgba(22,28,38,.70);
+  --lg-tint:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,0) 55%,rgba(255,255,255,.03));
+  --lg-blur:blur(28px) saturate(170%) brightness(.95);
+  --lg-rim:linear-gradient(140deg,rgba(255,255,255,.34),rgba(255,255,255,.10) 22%,rgba(255,255,255,.02) 48%,rgba(255,255,255,.05) 72%,rgba(255,255,255,.22));
+  --lg-inner:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(255,255,255,.05),inset 0 0 22px rgba(255,255,255,.03);
+  --lg-depth:0 2px 6px rgba(0,0,0,.25),0 18px 44px rgba(0,0,0,.40);
+  --amb1:rgba(70,110,255,.30); --amb2:rgba(30,170,150,.18); --amb3:rgba(255,160,60,.14); --amb4:rgba(140,100,255,.16);
+}
+
+/* the backdrop the glass bends: ambient light drifts very slowly so the material reads as alive */
+body::before{inset:-8%;animation:ambient 60s ease-in-out infinite alternate;will-change:transform}
+@keyframes ambient{50%{transform:translate3d(2.5%,-2%,0) scale(1.04)}100%{transform:translate3d(-2%,2.5%,0) scale(1.02)}}
+
+/* material */
+.glass,.panel,.topbar,.drawer,.dialog,.tabbar,.sheet,.m-shift,.m-shift2 .sh{
+  background:var(--lg-tint),var(--glass-card);
+  -webkit-backdrop-filter:var(--lg-blur);backdrop-filter:var(--lg-blur);
+  border-color:transparent;box-shadow:var(--lg-inner),var(--lg-depth)}
+.topbar{background:var(--lg-tint),var(--glass)}
+.drawer,.dialog,.sheet,.tabbar{background:var(--lg-tint),var(--glass-strong);box-shadow:var(--lg-inner),var(--shadow-up)}
+.glass::before,.panel::before{background:radial-gradient(120% 60% at 20% 0%,rgba(255,255,255,.18),transparent 60%)}
+/* inner tiles on glass: frosted, not grey slabs */
+.m-stats div,.m-daynav button,.ent{background:var(--ctl);box-shadow:var(--ctl-ring)}
+
+/* light-catching rim: a 1px gradient stroke, brightest where light hits (top-left) and its reflection (bottom-right) */
+.glass::after,.panel::after,.topbar::after,.drawer::after,.tabbar::after,.m-shift::after,.m-shift2 .sh::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:1;
+  background:var(--lg-rim);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.m-shift{position:relative}
+/* scrolling sheets/dialogs get their rim from an inset shadow (below) so it never scrolls away */
+
+/* controls sitting on glass pick up the same optics */
+:root{--ctl:rgba(255,255,255,.38);--ctl-hover:rgba(255,255,255,.62);--ctl-ring:inset 0 1px 0 rgba(255,255,255,.75),inset 0 0 0 1px rgba(255,255,255,.35);
+  --ctl-on:rgba(255,255,255,.88);--ctl-on-ring:inset 0 1px 0 #fff,0 3px 12px rgba(20,40,90,.14);--nav-on:rgba(255,255,255,.55);--rim-flat:rgba(255,255,255,.55)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ctl:rgba(255,255,255,.07);--ctl-hover:rgba(255,255,255,.13);
+  --ctl-ring:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06);--ctl-on:rgba(255,255,255,.14);--ctl-on-ring:inset 0 1px 0 rgba(255,255,255,.18);
+  --nav-on:rgba(255,255,255,.09);--rim-flat:rgba(255,255,255,.10)}}
+:root[data-theme="dark"]{--ctl:rgba(255,255,255,.07);--ctl-hover:rgba(255,255,255,.13);
+  --ctl-ring:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06);--ctl-on:rgba(255,255,255,.14);--ctl-on-ring:inset 0 1px 0 rgba(255,255,255,.18);
+  --nav-on:rgba(255,255,255,.09);--rim-flat:rgba(255,255,255,.10)}
+.btn:not(.primary):not(.ink):not(.tonal):not(.danger):not(.ghost),.chip,.seg{background:var(--ctl);box-shadow:var(--ctl-ring)}
+.btn:not(.primary):not(.ink):not(.tonal):not(.danger):not(.ghost):hover,.chip:hover{background:var(--ctl-hover)}
+.chip[aria-pressed=true]{background:var(--primary-soft);box-shadow:inset 0 0 0 2px var(--primary)}
+.btn.primary{box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(0,0,0,.12),0 8px 22px color-mix(in srgb,var(--primary) 34%,transparent)}
+.seg button[aria-pressed=true]{background:var(--ctl-on);box-shadow:var(--ctl-on-ring)}
+.nav-it[aria-current=page]{background:var(--nav-on);box-shadow:var(--ctl-ring),0 6px 16px rgba(20,40,90,.08)}
+.dialog,.sheet{box-shadow:inset 0 0 0 1px var(--rim-flat),var(--lg-inner),var(--shadow-up)}
+
+/* the planner grid is work content: keep it solid but let its frame sit in the glass */
+.matrix-wrap{box-shadow:inset 0 0 0 1px var(--line),0 1px 0 rgba(255,255,255,.6)}
+
+/* themed browser surfaces */
+::selection{background:color-mix(in srgb,var(--primary) 28%,transparent)}
+*{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--fg-3) 55%,transparent) transparent}
+
+/* accessibility / performance fallbacks */
+@media (prefers-reduced-motion:reduce){body::before{animation:none}}
+@media (prefers-reduced-transparency:reduce){
+  :root,:root[data-theme="dark"]{--glass:var(--surface);--glass-card:var(--surface);--glass-strong:var(--surface);--lg-tint:linear-gradient(transparent,transparent)}
+  .glass,.panel,.topbar,.drawer,.dialog,.tabbar,.sheet,.m-shift,.m-shift2 .sh,.toast,.pubbar,.scrim{-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  :root{--glass:rgba(255,255,255,.92);--glass-card:rgba(255,255,255,.94);--glass-strong:#fff}
+}
