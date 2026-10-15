@@ -1,9 +1,10 @@
 # HRM WorkSpace — Agent Instructions
 
 - Primary language: Thai. Product UI: Thai main line, Japanese secondary small line. Missing/unapproved translations = `[รอแปล]`.
+
 ## Skills
-- งาน UI ใช้ skill impeccable เป็นหลัก
-- เลือกสี/ฟอนต์/style ค้นจาก ui-ux-pro-max ก่อน
+- งาน UI/ดีไซน์ทุกงาน → ใช้ skill `impeccable` เป็นหลัก
+- เลือกสี/ฟอนต์/style → ค้นจาก `ui-ux-pro-max` ก่อน
 - ห้ามใช้ `using-superpowers` และ `task-observer` เว้นแต่จะสั่ง
 - `hrm-hydraulic-theme` = design tokens ที่แอปนี้ใช้อยู่แล้ว (`app/web/css/base.css`) — งานแก้หน้าจอเดิมให้คงความสอดคล้องกับ tokens นี้ ถ้าผลจาก `ui-ux-pro-max` จะเปลี่ยนสี/ฟอนต์หลักของแอป ให้ถามผู้ใช้ก่อน. Japanese replaces its default EN secondary line.
 - Repo workflow, tests and release steps → `hrm-workspace-dev`
