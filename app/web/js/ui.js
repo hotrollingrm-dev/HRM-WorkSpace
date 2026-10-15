@@ -1,4 +1,8 @@
 // Shared UI helpers: element builder, icons, bilingual labels, toast, dialog, api.
+import { sticker, hasSticker } from "./stickers.js";
+export { sticker, hasSticker };
+/** Sticker when one exists for this name, else the line icon. */
+export const art = (name, size = 30, cls = "") => hasSticker(name) ? sticker(name, size, cls) : icon(name);
 
 export const h = (tag, attrs = {}, ...kids) => {
   const el = document.createElementNS(tag === "svg" || attrs.__svg ? "http://www.w3.org/2000/svg" : "http://www.w3.org/1999/xhtml", tag);
@@ -71,6 +75,7 @@ const mixHex = (hex, other, t) => { const a = parseInt(hex.slice(1), 16), b = pa
   const r = ch(a >> 16, b >> 16), g = ch((a >> 8) & 255, (b >> 8) & 255), bl = ch(a & 255, b & 255);
   return `#${((1 << 24) | (r << 16) | (g << 8) | bl).toString(16).slice(1)}`; };
 export const tile3d = (glyph, color = TILE.brand, size = 44) => {
+  if (hasSticker(glyph)) return sticker(glyph, size, "tile");
   const id = `t${++tileSeq}`;
   const dark = document.documentElement.dataset.theme === "dark" ||
     (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);

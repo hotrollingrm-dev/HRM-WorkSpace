@@ -1,6 +1,6 @@
 // App-shell cache only. API responses are never cached (always the latest published plan).
-const CACHE = "hrm-shell-v3";
-const SHELL = ["/m.html", "/index.html", "/css/base.css", "/css/mobile.css", "/css/desktop.css", "/css/tablet.css", "/img/scene-day.svg", "/img/scene-night.svg", "/manifest-plan.webmanifest",
+const CACHE = "hrm-shell-v4";
+const SHELL = ["/m.html", "/index.html", "/css/base.css", "/css/mobile.css", "/css/desktop.css", "/css/tablet.css", "/img/scene-day.svg", "/img/scene-night.svg", "/img/frost-day.jpg", "/img/frost-night.jpg", "/js/stickers.js", "/manifest-plan.webmanifest",
   "/js/ui.js", "/js/mobile.js", "/js/desktop.js", "/js/login.js", "/manifest.webmanifest", "/icons/icon.svg",
   "/fonts/ibm-plex-sans-thai-looped-thai-400-normal.woff2", "/fonts/ibm-plex-sans-thai-looped-thai-600-normal.woff2",
   "/fonts/ibm-plex-sans-thai-looped-latin-400-normal.woff2", "/fonts/ibm-plex-sans-thai-looped-latin-600-normal.woff2"];

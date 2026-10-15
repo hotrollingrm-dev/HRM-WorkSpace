@@ -2,6 +2,10 @@
 
     python -m tools.draw_scene        → web/img/scene-day.svg, web/img/scene-night.svg
 
+Frost copies for the desktop panels (pre-blurred, see base.css "performance"):
+    render each SVG to PNG at 1600×1000, then
+    ffmpeg -i scene-day.png -vf "scale=800:500,gblur=sigma=14,scale=1600:1000" -q:v 6 web/img/frost-day.jpg
+
 Pure geometry: a pinhole camera projects simple 3D boxes / cylinders, painted far → near
 with flat pastel fills, a warm outline and light atmospheric haze. Generic equipment only —
 no company layout, names or data.
@@ -18,8 +22,8 @@ CAM = (1.2, 2.5, 0.0)              # eye position (m): standing next to the line
 OUT = Path(__file__).resolve().parent.parent / "web" / "img"
 
 DAY = dict(
-    sky0="#A9D8F2", sky1="#E9F5FB", cloud="#FFFFFF", cloud_sh="#DCEEF8", ground_out="#CFE3C4",
-    haze="#E3EEF4", line="#86705E", star=None,
+    sky0="#8EC3EA", sky1="#FCE6C8", cloud="#FFFFFF", cloud_sh="#DCEEF8", ground_out="#CFE3C4",
+    haze="#F1E6D6", line="#86705E", star=None, beam="#FFF1CF", pool=None,
     wall="#F5EDE0", wall_sh="#E7DAC6", wain="#D9CDB8", roof="#EFE6D8", truss="#B9A890",
     col=("#E9DFC9", "#F6EFE2", "#D8CBB2"), floor="#CDD5CE", floor_ln="#BCC6BF", walk="#E9DEC9",
     safety="#F2D27A", stripe="#FBFAF5",
@@ -34,7 +38,7 @@ DAY = dict(
 )
 NIGHT = dict(
     sky0="#1B2444", sky1="#3B4878", cloud="#5A6797", cloud_sh="#46527F", ground_out="#2E3A4E",
-    haze="#2A3350", line="#1A1F30", star="#F4F1DC",
+    haze="#2A3350", line="#1A1F30", star="#F4F1DC", beam="#BFD0FF", pool="#FFD98E",
     wall="#3E465E", wall_sh="#343B51", wain="#2F3549", roof="#383F56", truss="#59617A",
     col=("#4A526B", "#5A637D", "#3C435A"), floor="#3A4152", floor_ln="#454D60", walk="#444A5C",
     safety="#C9A64C", stripe="#5B6274",
@@ -388,9 +392,38 @@ def build(pal, night=False):
               f'<rect x="{m0[0] + (m1[0] - m0[0]) * .5:.1f}" y="{m0[1] + 20:.1f}" width="{(m1[0] - m0[0]) * .36:.1f}" height="{(m1[1] - m0[1]) * .46:.1f}" rx="4" fill="{p["sign_ic"]}"/>'
               f'<rect x="{m0[0] + 10:.1f}" y="{m0[1] + (m1[1] - m0[1]) * .62:.1f}" width="{(m1[0] - m0[0]) * .3:.1f}" height="6" rx="3" fill="{p["coil_ring"]}"/>')
 
+    # golden-hour light: window patches on the floor + soft volumetric shafts (day); lamp pools (night)
+    L = (1.0, -0.62, 0.28)                       # sun direction, entering through the left windows
+    light = []
+    if not night:
+        for z0 in range(16, 76, 12):
+            win = [(WALL_L, 5.6, z0 + 2), (WALL_L, 10.4, z0 + 2), (WALL_L, 10.4, z0 + 9), (WALL_L, 5.6, z0 + 9)]
+            floor = [(x + L[0] * y / -L[1], 0, z + L[2] * y / -L[1]) for x, y, z in win]
+            fp = [P(*q) for q in [floor[0], floor[1], floor[2], floor[3]]]
+            bg.append(f'<polygon points="{pts(fp)}" fill="{p["beam"]}" opacity=".55"/>')
+            hull = _hull([P(*q) for q in win + floor])
+            light.append(f'<polygon points="{pts(hull)}" fill="url(#beam)" opacity=".55"/>')
+        rnd2 = random.Random(11)
+        for _ in range(70):   # dust motes caught in the light
+            x, y = rnd2.uniform(80, 900), rnd2.uniform(120, 700)
+            light.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rnd2.choice([1, 1.4, 2]):.1f}" fill="#FFF8E6" opacity="{rnd2.uniform(.35, .9):.2f}"/>')
+    else:
+        for x in (-4.5, 5.5):
+            for z in range(30, 100, 15):
+                c, e = P(x, 0, z), F * 2.6 / z
+                bg.append(f'<ellipse cx="{c[0]:.1f}" cy="{c[1]:.1f}" rx="{e * 1.4:.1f}" ry="{e * .45:.1f}" fill="url(#pool)"/>')
+        # cool moonlight shafts from the right windows
+        for z0 in range(16, 64, 12):
+            win = [(WALL_R, 5.6, z0 + 2), (WALL_R, 10.4, z0 + 2), (WALL_R, 10.4, z0 + 9), (WALL_R, 5.6, z0 + 9)]
+            floor = [(x - 1.0 * y / .7, 0, z + .2 * y / .7) for x, y, z in win]
+            light.append(f'<polygon points="{pts(_hull([P(*q) for q in win + floor]))}" fill="url(#beam)" opacity=".28"/>')
+    S.fx.extend(light)
+
     body = "".join(svg for _, svg in sorted(S.items, key=lambda t: -t[0]))
     defs = (f'<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{p["sky0"]}"/>'
-            f'<stop offset=".55" stop-color="{p["sky1"]}"/></linearGradient>'
+            f'<stop offset=".62" stop-color="{p["sky1"]}"/></linearGradient>'
+            f'<linearGradient id="beam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{p["beam"]}" stop-opacity=".9"/><stop offset="1" stop-color="{p["beam"]}" stop-opacity="0"/></linearGradient>'
+            f'<radialGradient id="pool"><stop offset="0" stop-color="{p["pool"] or "#fff"}" stop-opacity=".45"/><stop offset="1" stop-color="{p["pool"] or "#fff"}" stop-opacity="0"/></radialGradient>'
             '<radialGradient id="lampglow"><stop offset="0" stop-color="#FFE4A8" stop-opacity=".55"/><stop offset="1" stop-color="#FFE4A8" stop-opacity="0"/></radialGradient></defs>')
     ink = ('<filter id="ink" x="-2%" y="-2%" width="104%" height="104%">'
            '<feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="2" seed="3" result="n"/>'

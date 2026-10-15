@@ -5,6 +5,7 @@ from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Response, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from sqlalchemy import select
@@ -36,6 +37,7 @@ def create_app(db_url: str | None = None, *, seed_master: bool = True) -> FastAP
             print(f"\n  First run — admin user: {config.ADMIN_USERNAME}  password: {pw}\n")
 
     app = FastAPI(title="HRM WorkSpace", version="0.1.0-m1")
+    app.add_middleware(GZipMiddleware, minimum_size=1024, compresslevel=5)   # tablets on Wi-Fi: ~200 KB plan JSON → ~20 KB
 
     @app.exception_handler(P.PlanError)
     @app.exception_handler(importer.ImportError_)

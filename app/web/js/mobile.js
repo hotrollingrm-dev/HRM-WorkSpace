@@ -1,4 +1,4 @@
-import { h, icon, bi, T, toast, tile3d, TILE, api, ApiError, TH_MONTH_S, TH_WD_L, JP_WD, pd, iso, hhmm, todayIso, statusPill, heatStrip } from "./ui.js";
+import { h, icon, bi, T, toast, tile3d, TILE, api, ApiError, TH_MONTH_S, TH_WD_L, JP_WD, pd, iso, hhmm, todayIso, statusPill, heatStrip , art } from "./ui.js";
 import { loginView } from "./login.js";
 
 const RANK = { viewer: 0, leader: 1, foreman: 2, admin: 3 };
@@ -11,7 +11,7 @@ async function boot() {
   try { S.me = await api("/me"); }
   catch (e) {
     if (e.status === 401) return app.replaceChildren(loginView(boot, { compact: true }));
-    return app.replaceChildren(h("div", { class: "empty", style: { minHeight: "80vh" } }, icon("wifiOff"), h("h3", {}, "เชื่อมต่อไม่ได้"),
+    return app.replaceChildren(h("div", { class: "empty", style: { minHeight: "80vh" } }, art("wifiOff", 76, "hero"), h("h3", {}, "เชื่อมต่อไม่ได้"),
       h("p", {}, e.message), h("button", { class: "btn lg", onclick: boot }, "ลองใหม่")));
   }
   const tab = location.hash.slice(2);
@@ -30,7 +30,7 @@ function render() {
   const tabbar = h("nav", { class: "tabbar", "aria-label": "เมนู" },
     [["today", "sun", "today"], ["next", "calendar", "upcoming"], ["shift", "users", "shift"], ["me", "user", "account"]].map(([k, ic, t]) =>
       h("a", { href: `#/${k}`, "aria-current": S.tab === k ? "page" : null, onclick: e => { e.preventDefault(); S.tab = k; history.replaceState(null, "", `#/${k}`); render(); } },
-        icon(ic), T[t][0])));
+        art(ic, 28, "nav"), T[t][0])));
   if (!d) return app.replaceChildren(h("div", { class: "m-body" }, h("div", { class: "skeleton", style: { height: "220px", borderRadius: "22px" } })), tabbar);
   const view = { today: todayView, next: nextView, shift: shiftView, me: meView }[S.tab]();
   app.replaceChildren(...view, tabbar);
@@ -69,7 +69,7 @@ function todayView() {
   const body = h("main", { class: "m-body" });
   body.append(shiftCard(d.shift));
   if (!d.entries.length) {
-    body.append(h("div", { class: "empty" }, icon("calendar"), h("h3", {}, "ไม่มีงานที่ Publish สำหรับวันนี้"),
+    body.append(h("div", { class: "empty" }, art("calendar", 76, "hero"), h("h3", {}, "ไม่มีงานที่ Publish สำหรับวันนี้"),
       h("p", {}, "ถ้าคาดว่าควรมีงาน ให้ Foreman ตรวจว่าแผนเดือนนี้ Publish แล้ว"),
       h("button", { class: "btn lg", onclick: () => { S.tab = "next"; render(); } }, "ดูงาน 7 วันถัดไป")));
     return [hero(), body];
@@ -143,7 +143,7 @@ function sheet(e) {
 function nextView() {
   const d = S.data, body = h("main", { class: "m-body" });
   body.append(h("h1", { style: { fontSize: "28px", margin: "8px 4px 2px", fontWeight: 600 } }, bi("upcoming")));
-  if (!d.upcoming.length) { body.append(h("div", { class: "empty" }, icon("calendar"), h("h3", {}, "ยังไม่มีงานที่ Publish ใน 7 วันถัดไป"))); return [body]; }
+  if (!d.upcoming.length) { body.append(h("div", { class: "empty" }, art("calendar", 76, "hero"), h("h3", {}, "ยังไม่มีงานที่ Publish ใน 7 วันถัดไป"))); return [body]; }
   const byDay = {};
   d.upcoming.forEach(e => (byDay[e.op_day] ||= []).push(e));
   for (const [day, es] of Object.entries(byDay).sort()) {
@@ -159,7 +159,7 @@ const tm = iso => iso ? iso.slice(11, 16) : "";
 function shiftCard(sh) {
   const go = () => { S.tab = "shift"; render(); };
   if (sh.status !== "scheduled") return h("button", { class: "m-shift", onclick: go },
-    h("span", { class: "ic2" }, icon("users")),
+    h("span", { class: "ic2" }, art("users", 34)),
     h("span", {}, h("div", { class: "t" }, "กะวันนี้"), h("div", { class: "s" }, sh.message)), icon("chevR"));
   return h("button", { class: "m-shift2", onclick: go, "aria-label": "ดูรายชื่อกะวันนี้" },
     sh.shifts.map(x => h("span", { class: `sh ${x.code} ${sh.now_phase === x.code ? "now" : ""}` },

@@ -1,5 +1,5 @@
 import { h, icon, bi, biName, T, toast, tile3d, TILE, dialog, api, ApiError, TH_MONTH, TH_MONTH_S, TH_WD, TH_WD_L,
-  pd, iso, hhmm, todayIso, statusPill, heatStrip, STATUS } from "./ui.js";
+  pd, iso, hhmm, todayIso, statusPill, heatStrip, STATUS , art } from "./ui.js";
 import { loginView, millArt } from "./login.js";
 
 const RANK = { viewer: 0, leader: 1, foreman: 2, admin: 3 };
@@ -24,7 +24,7 @@ function showLogin() {
   app.replaceChildren(loginView(async () => { await boot(); }));
 }
 function fatal(e) {
-  app.replaceChildren(h("div", { class: "empty", style: { minHeight: "100vh" } }, icon("wifiOff"),
+  app.replaceChildren(h("div", { class: "empty", style: { minHeight: "100vh" } }, art("wifiOff", 76, "hero"),
     h("h3", {}, "เปิดระบบไม่ได้"), h("p", {}, e.message),
     h("button", { class: "btn", onclick: () => location.reload() }, "ลองใหม่")));
 }
@@ -45,7 +45,7 @@ function shell(page) {
   const initials = (S.me.display_name || S.me.username).trim().slice(0, 1);
   mainEl = h("main", { class: "main", id: "main" });
   const item = (href, ic, key, current, extra = {}) => h("a", { href, "aria-current": current ? "page" : null, class: "nav-it", ...extra },
-    icon(ic), bi(key), h("span", { class: "tip", role: "tooltip" }, T[key]?.[0] || key[0]));
+    art(ic, 30, "nav"), bi(key), h("span", { class: "tip", role: "tooltip" }, T[key]?.[0] || key[0]));
   app.replaceChildren(h("div", { class: "shell" },
     h("nav", { class: "rail glass", "aria-label": "เมนูหลัก" },
       h("div", { class: "brand" }, tile3d("slab", TILE.brand, 44), h("span", { class: "bi" }, h("b", {}, "HRM WorkSpace"), h("span", { class: "jp", lang: "ja" }, "熱間圧延 作業計画"))),
@@ -163,7 +163,7 @@ function matrix() {
   const items = allItems().filter(i => rows.has(i.id));
   if (!items.length) {
     body.append(h("tr", {}, h("td", { colspan: days.length + 1 },
-      h("div", { class: "empty" }, icon("grid"), h("h3", {}, "เดือนนี้ยังไม่มีแถวงาน"),
+      h("div", { class: "empty" }, art("grid", 76, "hero"), h("h3", {}, "เดือนนี้ยังไม่มีแถวงาน"),
         h("p", {}, "เลือกงานและวันที่จากแผงลงงานด่วนทางขวา หรือคัดลอกแถวงานจากเดือนก่อน"),
         can("leader") ? h("div", { style: { display: "flex", gap: "8px" } },
           h("button", { class: "btn", onclick: addRowsDialog }, icon("plus"), bi("addRow")),
@@ -228,7 +228,7 @@ function quickEntry() {
   const q = S.qe;
   const panel = h("aside", { class: "qe glass", "aria-label": "ลงงานด่วน" });
   if (!can("leader")) {
-    panel.append(h("div", { class: "empty" }, icon("info"), h("h3", {}, "ดูอย่างเดียว"), h("p", {}, "บทบาทของคุณดูแผนได้ แต่แก้ไขไม่ได้ ติดต่อ Foreman หากต้องการสิทธิ์")));
+    panel.append(h("div", { class: "empty" }, art("info", 76, "hero"), h("h3", {}, "ดูอย่างเดียว"), h("p", {}, "บทบาทของคุณดูแผนได้ แต่แก้ไขไม่ได้ ติดต่อ Foreman หากต้องการสิทธิ์")));
     return panel;
   }
   const redraw = () => panel.replaceWith(quickEntry());
@@ -374,7 +374,7 @@ function dayDrawer(d, focusUid) {
   const sec = (label, arr) => { if (!arr.length) return; list.append(h("div", { class: "sec" }, label, ` (${arr.length})`)); arr.forEach(e => list.append(entRow(e, d, close))); };
   sec("มีเวลา · ช่วง 08:00 วันนี้ ถึง 08:00 วันถัดไป", timed);
   sec(T.unscheduled[0], untimed);
-  if (!es.length) list.append(h("div", { class: "empty" }, icon("calendar"), h("h3", {}, "ยังไม่มีงานในวันนี้"), h("p", {}, "คลิกช่องในตาราง หรือใช้แผงลงงานด่วนเพื่อเพิ่มงาน")));
+  if (!es.length) list.append(h("div", { class: "empty" }, art("calendar", 76, "hero"), h("h3", {}, "ยังไม่มีงานในวันนี้"), h("p", {}, "คลิกช่องในตาราง หรือใช้แผงลงงานด่วนเพื่อเพิ่มงาน")));
   const dr = h("aside", { class: "drawer", role: "dialog", "aria-label": `รายละเอียดวันที่ ${dt.getDate()}` },
     h("div", { class: "drawer-h" },
       h("div", { style: { flex: 1 } }, h("div", { class: "d" }, `${dt.getDate()} ${TH_MONTH_S[dt.getMonth()]}`),
@@ -573,7 +573,7 @@ function fillEditor(box, mode, obj, cat, sub) {
   };
   box.replaceChildren(h("div", { class: "panel-h" }, h("h3", {}, label || "")),
     obj || isNew ? h("div", { style: { padding: "16px 18px" } }, parts, h("div", { style: { display: "flex", justifyContent: "flex-end" } }, save))
-      : h("div", { class: "empty" }, icon("edit"), h("p", {}, "เลือกรายการเพื่อแก้ไข")));
+      : h("div", { class: "empty" }, art("edit", 76, "hero"), h("p", {}, "เลือกรายการเพื่อแก้ไข")));
 }
 function systemPanels() {
   const b = S.settings.planning_bands, r = S.settings.official_roster_times, mk = S.settings.export_mark_mode || {};
@@ -617,7 +617,7 @@ function rosterPanel() {
       h("span", { style: { flex: 1 } }),
       can("leader") ? h("button", { class: `btn ${has ? "" : "primary"}`, onclick: preview }, icon("file"), has ? "ตรวจกับ PDF อีกครั้ง" : "ตรวจและนำเข้าตารางกะจาก PDF") : null);
     if (!has) {
-      bodyEl.replaceChildren(nav, h("div", { class: "empty", style: { padding: "24px" } }, icon("calendar"), h("h3", {}, "ยังไม่มีตารางกะของเดือนนี้"),
+      bodyEl.replaceChildren(nav, h("div", { class: "empty", style: { padding: "24px" } }, art("calendar", 76, "hero"), h("h3", {}, "ยังไม่มีตารางกะของเดือนนี้"),
         h("p", {}, "ข้อมูลถอดจาก ตารางกะ 3 Group.pdf (ม.ค. 2569 – มี.ค. 2570) พร้อมตรวจยอดกับคอลัมน์ WD และตารางสรุปใน PDF — กดตรวจก่อนนำเข้า")));
       return;
     }
@@ -751,7 +751,7 @@ async function importPage() {
         h("td", { style: { textAlign: "right" } },
           b.status === "preview" ? h("button", { class: "btn", onclick: async () => { IMP.batch = await api(`/imports/${b.id}`); renderImport(); } }, "เปิดตัวอย่าง") : null,
           b.status === "committed" && can("foreman") ? h("button", { class: "btn danger", onclick: () => revert(b) }, icon("history"), bi("revert")) : null)))))
-      : h("div", { class: "empty" }, icon("upload"), h("p", {}, "ยังไม่เคยนำเข้าไฟล์")));
+      : h("div", { class: "empty" }, art("upload", 76, "hero"), h("p", {}, "ยังไม่เคยนำเข้าไฟล์")));
   } catch (e) { if (e.status !== 403) err(e); }
 }
 function revert(b) {
@@ -830,7 +830,7 @@ async function historyPage() {
         h("span", { class: "pill bad" }, `ลบ ${x.diff.removed.length}`), h("span", { class: "hint" }, `โดย ${x.published_by || "-"}`)),
         x.note ? h("p", { style: { margin: "8px 0 0" } }, x.note) : null,
         x.diff.changed.length ? h("ul", { class: "hint", style: { margin: "8px 0 0", paddingLeft: "18px" } }, x.diff.changed.slice(0, 12).map(c => h("li", {}, `${c.fields.join(", ")}: ${JSON.stringify(c.before)} → ${JSON.stringify(c.after)}`))) : null))))
-      : h("div", { class: "empty" }, icon("history"), h("h3", {}, "ยังไม่มีการ Publish ในเดือนนี้"), h("p", {}, "เมื่อ Publish แผน ระบบจะเก็บแต่ละ REV และรายการที่เปลี่ยนไว้ที่นี่"))));
+      : h("div", { class: "empty" }, art("history", 76, "hero"), h("h3", {}, "ยังไม่มีการ Publish ในเดือนนี้"), h("p", {}, "เมื่อ Publish แผน ระบบจะเก็บแต่ละ REV และรายการที่เปลี่ยนไว้ที่นี่"))));
 }
 function shiftMonthH(d) { let { y, m } = S.ym; m += d; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } S.ym = { y, m }; location.hash = `#/history/${ymStr()}`; }
 

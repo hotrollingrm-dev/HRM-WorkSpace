@@ -362,3 +362,83 @@ body::before{background:var(--scene-veil),var(--scene) center bottom/cover no-re
   box-shadow:0 0 0 1px var(--ink-line),inset 0 1px 0 rgba(255,255,255,.5)}
 .login .art.glass::before,.m-login .art.glass::before{display:none}
 .login .art .mill,.m-login .art .mill{display:none}
+
+/* ═══════════ Premium pass (v4): stickers · glam buttons · gold hairlines · performance ═══════════ */
+:root{
+  --primary:#2B63CC; --primary-ink:#1D4CA8; --on-primary:#FFFFFF;
+  --gold:#B48C45; --gold-hi:#E8D3A2; --gold-line:rgba(180,140,69,.45);
+  --stk-line:#6B5748;
+  --pearl:linear-gradient(180deg,#FFFFFF 0%,#FBF7F0 55%,#F3ECE1 100%);
+  --pearl-hover:linear-gradient(180deg,#FFFFFF 0%,#FFFDF8 60%,#F8F2E8 100%);
+  --pearl-shadow:0 0 0 1px var(--ink-line),inset 0 1px 0 #fff,0 1px 2px rgba(80,60,40,.06),0 8px 18px -10px rgba(80,60,40,.30);
+  --frost:url(../img/frost-day.jpg);
+  --vignette:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(70,48,26,.16) 100%);
+  /* Japanese: use the OS font first (Yu Gothic on Windows, Hiragino on iPad/iPhone, Noto CJK on Android);
+     the bundled 1.1 MB Noto JP is only fetched when none of those exist */
+  --f-jp:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Meiryo","Noto Sans CJK JP","Noto Sans JP","Noto JP",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --primary:#8DB3FF; --primary-ink:#B3CCFF; --on-primary:#0B1530;
+  --gold:#E2C27F; --gold-hi:#F6E3B4; --gold-line:rgba(226,194,127,.38); --stk-line:#121624;
+  --pearl:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.05));
+  --pearl-hover:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));
+  --pearl-shadow:0 0 0 1px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.14),0 8px 18px -10px rgba(0,0,0,.6);
+  --frost:url(../img/frost-night.jpg); --vignette:radial-gradient(120% 90% at 50% 40%,transparent 50%,rgba(4,6,14,.45) 100%);
+}}
+:root[data-theme="dark"]{
+  --primary:#8DB3FF; --primary-ink:#B3CCFF; --on-primary:#0B1530;
+  --gold:#E2C27F; --gold-hi:#F6E3B4; --gold-line:rgba(226,194,127,.38); --stk-line:#121624;
+  --pearl:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.05));
+  --pearl-hover:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));
+  --pearl-shadow:0 0 0 1px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.14),0 8px 18px -10px rgba(0,0,0,.6);
+  --frost:url(../img/frost-night.jpg); --vignette:radial-gradient(120% 90% at 50% 40%,transparent 50%,rgba(4,6,14,.45) 100%);
+}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--vignette)}
+
+/* performance: big content panels on the desktop/tablet shell no longer blur live.
+   Live backdrop blur under a scrolling table dropped scrolling to ~10 fps; a pre-blurred copy of the
+   scene (fixed, aligned with the backdrop) gives the same frosted look for the cost of an image. */
+.main .glass,.main .panel,.shell .rail,.shell .topbar{-webkit-backdrop-filter:none;backdrop-filter:none;
+  background:var(--lg-tint),linear-gradient(var(--glass-card),var(--glass-card)),var(--scene-veil),var(--frost);
+  background-attachment:scroll,scroll,fixed,fixed;background-position:0 0,0 0,0 0,center bottom;background-size:auto,auto,auto,cover;background-repeat:no-repeat}
+
+/* stickers */
+.stk{flex:none;overflow:visible}
+.stk .o{stroke:var(--stk-line);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.nav-it .stk,.tabbar a .stk{filter:saturate(.45) opacity(.8);transition:filter .25s var(--ease),transform .25s var(--ease)}
+.nav-it:hover .stk,.nav-it[aria-current=page] .stk,.tabbar a[aria-current=page] .stk{filter:none;transform:translateY(-1px) rotate(-5deg)}
+.empty .stk.hero{filter:drop-shadow(0 10px 14px rgba(80,60,40,.18));animation:bob 5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) rotate(-3deg)}}
+.m-shift .ic2{background:transparent}
+.toast .stk{width:40px;height:40px}
+.rail .brand .stk{filter:drop-shadow(0 4px 8px rgba(80,60,40,.22))}
+
+/* glam buttons: jewel-cut primary with gloss, pearl secondary, gentle lift */
+.btn.primary{background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 78%,#fff) 0%,var(--primary) 52%,color-mix(in srgb,var(--primary) 78%,#071433) 100%);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--primary) 55%,#071433),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(7,20,51,.22),
+    0 12px 26px -8px color-mix(in srgb,var(--primary) 60%,transparent),0 2px 4px rgba(7,20,51,.12)}
+.btn.primary::before{content:"";position:absolute;left:1px;right:1px;top:1px;height:50%;border-radius:999px 999px 40% 40%/999px 999px 14px 14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,0));pointer-events:none}
+.btn.primary:hover{background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 70%,#fff) 0%,color-mix(in srgb,var(--primary) 94%,#fff) 52%,color-mix(in srgb,var(--primary) 82%,#071433) 100%)}
+.btn:not(.primary):not(.ink):not(.tonal):not(.danger):not(.ghost),.chip:not([aria-pressed=true]){background:var(--pearl);box-shadow:var(--pearl-shadow)}
+.btn:not(.primary):not(.ink):not(.tonal):not(.danger):not(.ghost):hover,.chip:not([aria-pressed=true]):hover{background:var(--pearl-hover)}
+.btn:not(:disabled):hover{transform:translateY(-1px)}
+.btn:not(:disabled):active{transform:translateY(1px) scale(.99)}
+.btn.primary:not(:disabled):active{box-shadow:0 0 0 1px color-mix(in srgb,var(--primary) 55%,#071433),inset 0 2px 4px rgba(7,20,51,.25)}
+.m-stats div,.m-daynav button,.ent{background:var(--pearl);box-shadow:var(--pearl-shadow)}
+
+/* gold hairlines: used sparingly for the "current" and identity marks */
+.nav-it[aria-current=page]::before{background:linear-gradient(180deg,var(--gold-hi),var(--gold))}
+.nav-it[aria-current=page]{box-shadow:var(--pearl-shadow);background:var(--pearl)}
+.revtag{box-shadow:0 0 0 1px var(--gold-line);color:var(--gold)}
+.month-title,.page-h,.drawer-h .d{letter-spacing:-.015em}
+.topbar{box-shadow:0 0 0 1px var(--ink-line),inset 0 -1px 0 var(--gold-line),var(--lg-inner),var(--lg-depth)}
+::selection{background:color-mix(in srgb,var(--gold) 30%,transparent)}
+/* mobile: content scrolls over the lower half of the scene — veil it so section headings stay readable */
+@media (max-aspect-ratio:3/4){
+  :root{--scene-veil:linear-gradient(180deg,rgba(243,237,227,.06) 0%,rgba(243,237,227,.30) 38%,rgba(243,237,227,.82) 62%,rgba(243,237,227,.88) 100%)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--scene-veil:linear-gradient(180deg,rgba(14,18,32,.12) 0%,rgba(14,18,32,.40) 38%,rgba(14,18,32,.84) 62%,rgba(14,18,32,.9) 100%)}}
+  :root[data-theme="dark"]{--scene-veil:linear-gradient(180deg,rgba(14,18,32,.12) 0%,rgba(14,18,32,.40) 38%,rgba(14,18,32,.84) 62%,rgba(14,18,32,.9) 100%)}
+}
+.m-daynav button{white-space:nowrap}
+.empty>svg.stk.hero{width:84px;height:84px}
